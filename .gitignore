@@ -1,0 +1,9 @@
+# never commit real secrets
+*secret*
+*password*
+*credentials*
+*.key
+*.pem
+id_ed25519*
+id_rsa*
+wazuh-install-files*

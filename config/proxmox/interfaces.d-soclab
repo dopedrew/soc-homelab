@@ -1,0 +1,13 @@
+# SOC homelab: fully isolated from the real LAN (10.10.0.0/24). No
+# bridge-ports, so there is no L2 path to vmbr0 or anything behind it.
+# NAT below gives outbound-only internet for package installs/updates;
+# nothing can initiate a connection INTO this network from outside it.
+auto vmbr99
+iface vmbr99 inet static
+    address 10.99.99.1/24
+    bridge-ports none
+    bridge-stp off
+    bridge-fd 0
+    post-up echo 1 > /proc/sys/net/ipv4/ip_forward
+    post-up iptables -t nat -A POSTROUTING -s 10.99.99.0/24 -o vmbr0 -j MASQUERADE
+    post-down iptables -t nat -D POSTROUTING -s 10.99.99.0/24 -o vmbr0 -j MASQUERADE
